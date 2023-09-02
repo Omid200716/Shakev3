@@ -1,7 +1,5 @@
 package com.example.test_fregment23_09_01;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -9,56 +7,36 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.util.Log;
-import android.widget.Toast;
+import androidx.fragment.app.Fragment;
 
-public class SecondMainactivity extends AppCompatActivity implements SensorEventListener{
+public class MyFragment extends Fragment implements SensorEventListener {
 
-
-    ImageView back;
     private TextView xValue, yValue, zValue;
     private ImageView accelerometerImage;
     private SensorManager sensorManager;
     private float rotationAngle = 0.0f;
-
     private static final float ROTATION_THRESHOLD = 30.0f;
 
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second_mainactivity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_accelerometer, container, false);
 
+        xValue = rootView.findViewById(R.id.xValue);
+        yValue = rootView.findViewById(R.id.yValue);
+        zValue = rootView.findViewById(R.id.zValue);
+        accelerometerImage = rootView.findViewById(R.id.image_accelerometer);
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 
-        xValue = findViewById(R.id.xValue);
-        yValue = findViewById(R.id.yValue);
-        zValue = findViewById(R.id.zValue);
-
-        back = findViewById(R.id.image_icon);
-        accelerometerImage = findViewById(R.id.image_accelerometer);
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-
-
-
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-
-
+        return rootView;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometerSensor != null) {
@@ -66,53 +44,40 @@ public class SecondMainactivity extends AppCompatActivity implements SensorEvent
         }
     }
 
-
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
     }
 
-
     @Override
     public void onSensorChanged(SensorEvent event) {
-
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
-            float y =event.values[1];
+            float y = event.values[1];
             float z = event.values[2];
-
 
             xValue.setText("X-värde: " + x);
             yValue.setText("Y-värde: " + y);
             zValue.setText("Z-värde: " + z);
 
-          
-
-
             rotationAngle = (x + y + z) / 3.0f;
 
+            // Ändra färgen baserat på rotationen längs x-axeln
             if (Math.abs(rotationAngle) > ROTATION_THRESHOLD) {
-                accelerometerImage.setColorFilter(Color.RED);
-
-                // Visa ett Toast-meddelande när skakning upptäcks
-                Toast.makeText(this, "Shake detected!", Toast.LENGTH_SHORT).show();
+                // Om rotationen överskrider tröskelvärdet, ändra färgen
+                accelerometerImage.setColorFilter(Color.RED); // Ändra till önskad färg
             } else {
-                accelerometerImage.setColorFilter(Color.GREEN);
+                // Återställ färgen om rotationen är inom tröskelvärdet
+                accelerometerImage.setColorFilter(Color.GREEN); // Återställ till önskad färg
             }
 
-
-
-
-
+            // Uppdatera bildens rotation
             accelerometerImage.setRotation(rotationAngle);
         }
-
-
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }
