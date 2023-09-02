@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.TestFregment23_09_01" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#EF533500</item>
+        <item name="colorPrimaryVariant">#DA5D87</item>
+        <item name="colorOnPrimary">#EFF4EBDA</item>
+        <item name="colorSecondary">#EFD0E31D</item>
+        <item name="colorSecondaryVariant">#EF1DB0CA</item>
+    </style>
+
+    <style name="Theme.TestFregment23_09_01" parent="Base.Theme.TestFregment23_09_01" />
+</resources>
