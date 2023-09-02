@@ -7,11 +7,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast; // Lägg till Toast här
 import androidx.fragment.app.Fragment;
 
 public class MyFragment extends Fragment implements SensorEventListener {
@@ -63,14 +65,16 @@ public class MyFragment extends Fragment implements SensorEventListener {
 
             rotationAngle = (x + y + z) / 3.0f;
 
-            // Ändra färgen baserat på rotationen längs x-axeln
-            if (Math.abs(rotationAngle) > ROTATION_THRESHOLD) {
-                // Om rotationen överskrider tröskelvärdet, ändra färgen
-                accelerometerImage.setColorFilter(Color.RED); // Ändra till önskad färg
+            if (Math.abs(rotationAngle)>ROTATION_THRESHOLD) {
+                Log.d("MinApp", "Inuti if-villkoret"); // Lägg till loggmeddelande
+                showToast("!");
+                accelerometerImage.setColorFilter(Color.BLUE);
             } else {
-                // Återställ färgen om rotationen är inom tröskelvärdet
-                accelerometerImage.setColorFilter(Color.GREEN); // Återställ till önskad färg
+                Log.d("MinApp", "Inuti else-villkoret"); // Lägg till loggmeddelande
+                accelerometerImage.setColorFilter(Color.GREEN);
+                showToast("Shaking is stop now!");
             }
+
 
             // Uppdatera bildens rotation
             accelerometerImage.setRotation(rotationAngle);
@@ -79,5 +83,11 @@ public class MyFragment extends Fragment implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    // Metod för att visa ett Toast-meddelande
+    private void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        Log.d(" hello ", message);
     }
 }
